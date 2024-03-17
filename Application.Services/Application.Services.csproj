@@ -11,12 +11,14 @@
     <None Remove="Services\Interface\" />
     <None Remove="Core\" />
     <None Remove="Mappers\" />
+    <None Remove="Validation\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
     <Folder Include="Services\Interface\" />
     <Folder Include="Core\" />
     <Folder Include="Mappers\" />
+    <Folder Include="Validation\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Application.DTO\Application.DTO.csproj">

@@ -1,5 +1,4 @@
 ﻿using Application.Services.Core;
-using System;
 using Microsoft.OpenApi.Models;
 using Application.Services.Services.Interface;
 using Data.Repository.Repositories.Interfaces;
@@ -7,6 +6,7 @@ using Application.Services.Services;
 using Data.Repository.Repositories;
 using Data.Repository.Context;
 using Microsoft.EntityFrameworkCore;
+using Application.Services.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +33,13 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
+builder.Services.AddAutoMapper(typeof(DtoToDomainMapping));
+builder.Services.AddAutoMapper(typeof(DomainToDtoMapping));
+builder.Services.AddAutoMapper(typeof(DomainToDtoUpdateMapping));
 
 var app = builder.Build();
 

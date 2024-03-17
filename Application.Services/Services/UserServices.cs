@@ -1,8 +1,8 @@
-﻿using System;
-using Application.Services.Mappers;
-using Application.Services.Services.Interface;
+﻿using Application.Services.Services.Interface;
+using AutoMapper;
 using Data.Repository.Repositories.Interfaces;
 using Domain.Model;
+using Domain.Model.Validation;
 
 namespace Application.Services.Services
 {
@@ -10,34 +10,45 @@ namespace Application.Services.Services
 	{
 
         private readonly IUserRepository userRepository;
+        private readonly ILogger<UserServices> _logger;
+        private readonly IMapper mapper;
 
-        public UserServices(IUserRepository userRepository)
+        public UserServices(IUserRepository userRepository,IMapper mapper, ILogger<UserServices> logger)
         {
             this.userRepository = userRepository;
+            this.mapper = mapper;
+            this._logger = logger;
         }
 
-        public async Task CreateUserAsync(DTO.Requests.User user, string createdBy)
+        public async Task CreateUserAsync(DTO.Requests.User userDto, string createdBy)
         {
-
-            if (await userRepository.GetUserByCodeAsync(user.userCode) != null)
+            try
             {
-                throw new Exception("The user already exist!");
+                userDto.Validate();
+
+                if (await userRepository.GetUserByCodeAsync(userDto.userCode) != null)
+                {
+                    throw new Exception("The user already exist!");
+                }
+
+                var date = DateTime.UtcNow;
+
+                var domainUser = mapper.Map<User> (userDto);
+                domainUser.CreationTime = date;
+                domainUser.CreatedBy = createdBy;
+
+                await userRepository.CreateProductAsync(domainUser);
             }
-
-            var date = DateTime.UtcNow;
-
-            var domainUser = new User()
+            catch (Exception ex)
             {
-                 FirstName = user.FirstName,
-                 LastName = user.LastName,
-                 emailAddress = user.emailAddress,
-                 NotesField = user.NotesField,
-                 CreationTime = date,
-                 UserCode = user.userCode.Trim(),
-                 CreatedBy = createdBy
-            };
-
-            await userRepository.CreateProductAsync(domainUser);
+                _logger.LogError("[UserService] - Failure to create a user.", ex,
+                    () => new
+                    {
+                        userDto.userCode,
+                        userDto.FirstName
+                    });
+                throw;
+            }
         }
 
         public async Task<List<User>> GetUserAsync()
@@ -48,29 +59,42 @@ namespace Application.Services.Services
 
         public async Task<DTO.Responses.User> GetUserByCodeAsync(string userCode)
         {
-            var userByCode = await userRepository.GetUserByCodeAsync(userCode);
-            return userByCode.ToDTO();
+            User userByCode = await userRepository.GetUserByCodeAsync(userCode);
+            
+            return mapper.Map<DTO.Responses.User>(userByCode);
         }
 
-        public async Task UpdateUserByCodeAsync(string userCode, DTO.Requests.UserUpdate user, string userName)
+        public async Task UpdateUserByCodeAsync(string userCode, DTO.Requests.UserUpdate userDto, string userName)
         {
-            User userUpdate = await userRepository.GetUserByCodeAsync(userCode);
-
-            if (userUpdate == null)
+            try
             {
-                throw new Exception("The user doesn't exist yet!");
+                userDto.Validate();
+
+                var userToUpdate = await userRepository.GetUserByCodeAsync(userCode);
+
+                if (userToUpdate == null)
+                {
+                    throw new Exception("The user doesn't exist yet!");
+                }
+
+                var date = DateTime.UtcNow;
+
+                userToUpdate = mapper.Map<DTO.Requests.UserUpdate, User>(userDto, userToUpdate);
+                userToUpdate.UpdatedTime = date;
+                userToUpdate.UpdatedBy = userName;
+
+                await userRepository.UpdateUserByCodeAsync(userToUpdate);
+
             }
-
-            var date = DateTime.UtcNow;
-
-            userUpdate.FirstName = user.FirstName;
-            userUpdate.LastName = user.LastName;
-            userUpdate.emailAddress = user.emailAddress;
-            userUpdate.NotesField = user.NotesField;
-            userUpdate.UpdatedBy = userName;
-            userUpdate.UpdatedTime = date;
-
-            await userRepository.UpdateUserByCodeAsync(userUpdate);
+            catch (Exception ex)
+            {
+                _logger.LogError("[UserService] - Failure to create a user.", ex,
+                    () => new
+                    {
+                        userCode
+                    });
+                throw;
+            }
         }
 
         public async Task DeleteUserByCodeAsync(string userCode)
@@ -79,7 +103,7 @@ namespace Application.Services.Services
 
             if (user == null)
             {
-                throw new Exception("The product doesn't exist yet!");
+                throw new Exception("The user doesn't exist yet!");
             }
 
             await userRepository.DeleteUserByCodeAsync(user);

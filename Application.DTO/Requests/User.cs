@@ -1,5 +1,4 @@
-﻿using System;
-namespace Application.DTO.Requests
+﻿namespace Application.DTO.Requests
 {
 	public class User
 	{
