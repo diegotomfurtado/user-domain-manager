@@ -109,6 +109,37 @@ namespace Application.Services.Tests.Services
         }
 
         [Fact]
+        public async Task CreateUserAsync_ShouldNotCreateNullObject_Fail()
+        {
+            // Arrange
+            var createdBy = this._fixture.Create<string>();
+            DTO.Requests.User userDto = null;
+
+            this._userRepositoryMock.Setup(
+                s => s.CheckExistenceOfUsersAsync(userDto))
+                .ReturnsAsync(false)
+                .Verifiable();
+
+            this._userRepositoryMock.Setup(
+                s => s.CheckExistenceOfEmailAddressAsync(userDto))
+                .ReturnsAsync(false)
+                .Verifiable();
+
+            this._userRepositoryMock.Setup(
+                s => s.CreateUserAsync(It.IsAny<User>()))
+                .Verifiable();
+
+            // Act
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            {
+                await this._userServices.CreateUserAsync(userDto, createdBy);
+            });
+
+            // Assert
+            Assert.Equal("The user object cannot be null. (Parameter 'user')", exception.Message);
+        }
+
+        [Fact]
         public async Task UpdateUserAsync_ShouldUpdate()
         {
             // Arrange
@@ -150,6 +181,29 @@ namespace Application.Services.Tests.Services
                              x.EmailAddress == userDto.emailAddress &&
                              x.NotesField == userDto.NotesField)),
                 Times.Once);
+        }
+
+        [Fact]
+        public async Task DeleteUserAsync_ShouldDeleteUser()
+        {
+            // Arrange
+            var userCode = this._fixture.Create<string>();
+            var userModel = this._fixture.Create<User>();
+
+            this._userRepositoryMock.Setup(
+                s => s.GetUserByCodeAsync(userCode))
+                .ReturnsAsync(userModel)
+                .Verifiable();
+
+            // Act
+            await this._userServices.DeleteUserByCodeAsync(userCode);
+
+            // Assert
+            this._userRepositoryMock.Verify(
+                v => v.DeleteUserByCodeAsync(It.IsAny<User>()), Times.Once);
+
+            this._userRepositoryMock.VerifyAll();
+            this._userRepositoryMock.VerifyNoOtherCalls();
         }
     }
 }
