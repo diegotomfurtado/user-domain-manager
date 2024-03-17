@@ -79,6 +79,11 @@ namespace Application.Services.Services
                     throw new UserNotFoundException();
                 }
 
+                if (await userRepository.CheckExistenceOfEmailAddressAsync(userDto))
+                {
+                    throw new EmailAddressAlreadyExistsException();
+                }
+
                 var date = DateTime.UtcNow;
 
                 userToUpdate = mapper.Map<DTO.Requests.UserUpdate, User>(userDto, userToUpdate);
@@ -146,6 +151,32 @@ namespace Application.Services.Services
         }
 
         public async Task CheckExistenceOfEmailAddressAsync(DTO.Requests.User user)
+        {
+            try
+            {
+                if ((await this.userRepository.CheckExistenceOfEmailAddressAsync(user)))
+                {
+                    throw new EmailAddressAlreadyExistsException();
+                }
+            }
+            catch (EmailAddressAlreadyExistsException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    "[UserService] - Failed to check existence of users.",
+                    ex,
+                    () => new
+                    {
+                        user
+                    });
+                throw;
+            }
+        }
+
+        public async Task CheckExistenceOfEmailAddressAsync(DTO.Requests.UserUpdate user)
         {
             try
             {

@@ -75,6 +75,13 @@ namespace Data.Repository.Repositories
             return emailAddressExists;
         }
 
+        public async Task<bool> CheckExistenceOfEmailAddressAsync(Application.DTO.Requests.UserUpdate user)
+        {
+            var emailAddressExists = await userDbContext.Users
+                .AnyAsync(x => x.EmailAddress == user.emailAddress);
+
+            return emailAddressExists;
+        }
     }
 }
 

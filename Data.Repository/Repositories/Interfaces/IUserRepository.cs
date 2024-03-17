@@ -11,7 +11,10 @@ namespace Data.Repository.Repositories.Interfaces
         Task UpdateUserByCodeAsync(User user);
         Task DeleteUserByCodeAsync(User user);
         Task<Dto.PagedBaseResponse<User>> GetPagedAsync(UserFilterDb userFilterDb);
+
+        //To improve - Create a generic interface
         Task<Boolean> CheckExistenceOfUsersAsync(Application.DTO.Requests.User user);
         Task<bool> CheckExistenceOfEmailAddressAsync(Application.DTO.Requests.User user);
+        Task<bool> CheckExistenceOfEmailAddressAsync(Application.DTO.Requests.UserUpdate user);
     }
 }
