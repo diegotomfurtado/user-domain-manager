@@ -1,6 +1,8 @@
-﻿using Application.Services.Core;
+﻿using System.ComponentModel.DataAnnotations;
+using Application.Services.Core;
 using Application.Services.Services.Interface;
 using Azure;
+using Data.Repository.Repositories.GenericFilter;
 using Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 using Request = Application.DTO.Requests;
@@ -9,7 +11,7 @@ using Responses = Application.DTO.Responses;
 namespace Presentation.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IUserServices userServices;
@@ -23,37 +25,53 @@ namespace Presentation.API.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ValidationProblemDetails))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ValidationProblemDetails))]
         public async Task<IActionResult> CreateUSerAsync(
         [FromBody] Request.User user,
         [FromHeader] string userName)
         {
-            await this.userServices.CreateUserAsync(user, userName);
+            try
+            {
+                await this.userServices.CreateUserAsync(user, userName);
+                return this.Created(new Uri($"{this.context.GetRawUrl().LocalPath}/{user.userCode}", UriKind.Relative), string.Empty);
 
-            return this.Created(new Uri($"{this.context.GetRawUrl().LocalPath}/{user.userCode}", UriKind.Relative), string.Empty);
+            }catch (AggregateException ex)
+            {
+                ModelState.AddModelError("ValidationError", ex.Message);
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<User>>> GetUserAsync()
+        public async Task<ActionResult<List<User>>> GetUserAsync([FromQuery] UserFilterDb userFilterDb)
         {
-            List<User> users = await this.userServices.GetUserAsync();
+            var users = await this.userServices.GetPagedAsync(userFilterDb);
             return this.Ok(users);
         }
 
         [HttpGet("{userCode}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Responses.User))]
-        public async Task<ActionResult<User>> GetUserByCodeAsync([FromRoute] string userCode)
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Responses.User))]
+        public async Task<IActionResult> GetUserByCodeAsync([FromRoute] string userCode)
         {
             var user = await this.userServices.GetUserByCodeAsync(userCode);
-            return this.Ok(user);
+            return user == null ? NotFound("The user was not found.") : this.Ok(user);
         }
 
         [HttpPut("{userCode}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ValidationProblemDetails))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ValidationProblemDetails))]
         public async Task<IActionResult> UpdateUser(
             [FromRoute] string userCode,
-            [FromBody] Request.UserUpdate user,
+            [FromBody] Request.UserUpdate userDto,
             [FromHeader] string userName)
         {
-            await this.userServices.UpdateUserByCodeAsync(userCode, user, userName);
+            await this.userServices.UpdateUserByCodeAsync(userCode, userDto, userName);
             return this.NoContent();
         }
 
@@ -62,7 +80,6 @@ namespace Presentation.API.Controllers
         {
             await this.userServices.DeleteUserByCodeAsync(userCode);
             return this.NoContent();
-
         }
     }
 }

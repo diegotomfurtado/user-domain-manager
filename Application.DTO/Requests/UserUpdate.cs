@@ -9,6 +9,7 @@
         public string? emailAddress { get; set; }
 
         public string? NotesField { get; set; }
+
     }
 }
 

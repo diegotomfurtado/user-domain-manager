@@ -14,8 +14,8 @@ namespace Data.Repository.Map
             builder.Property(x => x.FirstName).IsRequired().HasMaxLength(30);
             builder.Property(x => x.LastName).IsRequired().HasMaxLength(50);
             builder.Property(x => x.NotesField).IsRequired().HasMaxLength(500);
+            builder.Property(x => x.EmailAddress).IsRequired().HasMaxLength(10);
             builder.Property(x => x.CreatedBy).HasMaxLength(10);
-            builder.Property(x => x.emailAddress).IsRequired().HasMaxLength(10);
         }
     }
 }

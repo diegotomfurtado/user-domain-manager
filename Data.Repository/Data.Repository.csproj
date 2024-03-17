@@ -11,12 +11,14 @@
     <None Remove="Repositories\Interfaces\" />
     <None Remove="Context\" />
     <None Remove="Map\" />
+    <None Remove="Repositories\GenericFilter\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Repositories\" />
     <Folder Include="Repositories\Interfaces\" />
     <Folder Include="Context\" />
     <Folder Include="Map\" />
+    <Folder Include="Repositories\GenericFilter\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Application.DTO\Application.DTO.csproj">

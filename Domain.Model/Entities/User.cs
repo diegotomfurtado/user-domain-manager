@@ -1,5 +1,4 @@
-﻿using System;
-namespace Domain.Model
+﻿namespace Domain.Model
 {
 	public class User
 	{
@@ -11,7 +10,7 @@ namespace Domain.Model
 
         public string LastName { get; set; }
 
-        public string emailAddress { get; set; }
+        public string EmailAddress { get; set; }
 
         public string NotesField { get; set; }
 
