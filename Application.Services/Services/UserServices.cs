@@ -86,7 +86,7 @@ namespace Application.Services.Services
 
                 var date = DateTime.UtcNow;
 
-                userToUpdate = mapper.Map<DTO.Requests.UserUpdate, User>(userDto, userToUpdate);
+                userToUpdate = mapper.Map(userDto, userToUpdate);
                 userToUpdate.UpdatedTime = date;
                 userToUpdate.UpdatedBy = userName;
 
