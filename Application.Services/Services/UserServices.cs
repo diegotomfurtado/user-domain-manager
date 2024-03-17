@@ -45,7 +45,7 @@ namespace Application.Services.Services
                 domainUser.CreationTime = date;
                 domainUser.CreatedBy = createdBy;
 
-                await userRepository.CreateProductAsync(domainUser);
+                await userRepository.CreateUserAsync(domainUser);
             }
             catch (Exception ex)
             {

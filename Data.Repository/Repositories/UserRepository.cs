@@ -16,7 +16,7 @@ namespace Data.Repository.Repositories
             this.userDbContext = userDbContext;
         }
 
-        public async Task CreateProductAsync(User user)
+        public async Task CreateUserAsync(User user)
         {
             await userDbContext.Users.AddAsync(user);
             await userDbContext.SaveChangesAsync();

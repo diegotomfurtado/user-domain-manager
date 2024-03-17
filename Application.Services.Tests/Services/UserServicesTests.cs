@@ -69,10 +69,12 @@ namespace Application.Services.Tests.Services
         public async Task CreateUserAsync_ShouldCreate()
         {
             // Arrange
-
-            //DTO.Requests.User userDto, string createdBy
             var createdBy = this._fixture.Create<string>();
-            var userDto = this._fixture.Create<DTO.Requests.User>();
+            var userDto = this._fixture.Build<DTO.Requests.User>()
+                .With(x => x.FirstName, "Diego")
+                .With(x => x.LastName, "Furtado")
+                .With(x => x.emailAddress, "diegotomfurtado@gmail.com")
+                .Create();
 
             this._userRepositoryMock.Setup(
                 s => s.CheckExistenceOfUsersAsync(userDto))
@@ -84,27 +86,16 @@ namespace Application.Services.Tests.Services
                 .ReturnsAsync(false)
                 .Verifiable();
 
-            //Parei aqui - mockei os valores acima para FALSE - significa que nao possui no banco para poder cadastrar
-
-
+            this._userRepositoryMock.Setup(
+                s => s.CreateUserAsync(It.IsAny<User>()))
+                .Verifiable();
 
             // Act
-            var resultUserDto = await this._userServices.GetUserByCodeAsync(userCode);
+            await this._userServices.CreateUserAsync(userDto, createdBy);
 
             // Assert
-            Assert.True(resultUserDto != null, "O resultado não deveria ser nulo.");
-            Assert.Equal(resultUserDto.UserCode, userModel.UserCode);
-            Assert.Equal(resultUserDto.FirstName, userModel.FirstName);
-            Assert.Equal(resultUserDto.LastName, userModel.LastName);
-            Assert.Equal(resultUserDto.emailAddress, userModel.EmailAddress);
-            Assert.Equal(resultUserDto.NotesField, userModel.NotesField);
-            Assert.Equal(resultUserDto.CreatedBy, userModel.CreatedBy);
-            Assert.Equal(resultUserDto.CreationTime, userModel.CreationTime);
-            Assert.Equal(resultUserDto.UpdatedBy, userModel.UpdatedBy);
-            Assert.Equal(resultUserDto.UpdatedTime, userModel.UpdatedTime);
-
-            this._userRepositoryMock.VerifyAll();
-            this._userRepositoryMock.VerifyNoOtherCalls();
+            this._userRepositoryMock.Verify(
+                v => v.CreateUserAsync(It.IsAny<User>()), Times.Once);
         }
     }
 }
