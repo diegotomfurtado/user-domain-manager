@@ -8,7 +8,7 @@ namespace Domain.Model.Validation
 {
 	public static class UsertValidation
     {
-        public static void Validate(this Request.User user)
+        public static void ValidateInput(this Request.User user)
         {
             var exceptions = new List<ArgumentException>();
             var regexItem = new Regex(@"\d");
@@ -49,7 +49,7 @@ namespace Domain.Model.Validation
             }
         }
 
-        public static void Validate(this Request.UserUpdate user)
+        public static void ValidateInput(this Request.UserUpdate user)
         {
             var exceptions = new List<ArgumentException>();
             var regexItem = new Regex(@"\d");

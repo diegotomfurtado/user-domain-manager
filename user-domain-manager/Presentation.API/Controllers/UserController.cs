@@ -2,6 +2,7 @@
 using Application.Services.Core;
 using Application.Services.Services.Interface;
 using Azure;
+using Data.Repository.Repositories.GenericFilter;
 using Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 using Request = Application.DTO.Requests;
@@ -44,9 +45,9 @@ namespace Presentation.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<User>>> GetUserAsync()
+        public async Task<ActionResult<List<User>>> GetUserAsync([FromQuery] UserFilterDb userFilterDb)
         {
-            List<User> users = await this.userServices.GetUserAsync();
+            var users = await this.userServices.GetPagedAsync(userFilterDb);
             return this.Ok(users);
         }
 

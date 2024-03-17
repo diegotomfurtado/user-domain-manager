@@ -12,6 +12,7 @@
     <None Remove="Core\" />
     <None Remove="Mappers\" />
     <None Remove="Validation\" />
+    <None Remove="Exceptions\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
@@ -19,6 +20,7 @@
     <Folder Include="Core\" />
     <Folder Include="Mappers\" />
     <Folder Include="Validation\" />
+    <Folder Include="Exceptions\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Application.DTO\Application.DTO.csproj">
