@@ -96,6 +96,60 @@ namespace Application.Services.Tests.Services
             // Assert
             this._userRepositoryMock.Verify(
                 v => v.CreateUserAsync(It.IsAny<User>()), Times.Once);
+
+            this._userRepositoryMock.Verify(
+                v => v.CreateUserAsync(
+                    It.Is<User>(
+                        x => x.UserCode == userDto.userCode &&
+                             x.FirstName == userDto.FirstName &&
+                             x.LastName == userDto.LastName &&
+                             x.EmailAddress == userDto.emailAddress &&
+                             x.NotesField == userDto.NotesField)),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task UpdateUserAsync_ShouldUpdate()
+        {
+            // Arrange
+            var name = this._fixture.Create<string>();
+            var userCode = this._fixture.Create<string>();
+            var userModel = this._fixture.Create<User>();
+            var userDto = this._fixture.Build<DTO.Requests.UserUpdate>()
+                .With(x => x.FirstName, "Diego")
+                .With(x => x.LastName, "Furtado")
+                .With(x => x.emailAddress, "diegotomfurtado@gmail.com")
+                .Create();
+
+            this._userRepositoryMock.Setup(
+                s => s.GetUserByCodeAsync(userCode))
+                .ReturnsAsync(userModel)
+                .Verifiable();
+
+            this._userRepositoryMock.Setup(
+                s => s.CheckExistenceOfEmailAddressAsync(userDto))
+                .ReturnsAsync(false)
+                .Verifiable();
+
+            this._userRepositoryMock.Setup(
+                s => s.UpdateUserByCodeAsync(It.IsAny<User>()))
+                .Verifiable();
+
+            // Act
+            await this._userServices.UpdateUserByCodeAsync(userCode, userDto, name);
+
+            // Assert
+            this._userRepositoryMock.Verify(
+                v => v.UpdateUserByCodeAsync(It.IsAny<User>()), Times.Once);
+
+            this._userRepositoryMock.Verify(
+                v => v.UpdateUserByCodeAsync(
+                    It.Is<User>(
+                        x => x.FirstName == userDto.FirstName &&
+                             x.LastName == userDto.LastName &&
+                             x.EmailAddress == userDto.emailAddress &&
+                             x.NotesField == userDto.NotesField)),
+                Times.Once);
         }
     }
 }

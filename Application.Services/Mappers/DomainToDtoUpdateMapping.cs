@@ -8,7 +8,7 @@ namespace Application.Services.Mappers
 	{
 		public DomainToDtoUpdateMapping()
 		{
-            CreateMap<DomainModel.User, Dto.UserUpdate>();
+            CreateMap<Dto.UserUpdate, DomainModel.User>();
         }
 	}
 }

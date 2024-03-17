@@ -110,7 +110,7 @@ namespace Application.Services.Services
 
             if (user == null)
             {
-                throw new Exception("The user doesn't exist yet!");
+                throw new UserNotFoundException();
             }
 
             await userRepository.DeleteUserByCodeAsync(user);
