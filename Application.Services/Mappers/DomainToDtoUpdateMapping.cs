@@ -1,5 +1,5 @@
 ﻿using DomainModel = Domain.Model;
-using Application.DTO.Requests;
+using Dto = Application.DTO.Requests;
 using AutoMapper;
 
 namespace Application.Services.Mappers
@@ -8,7 +8,7 @@ namespace Application.Services.Mappers
 	{
 		public DomainToDtoUpdateMapping()
 		{
-            CreateMap<UserUpdate, DomainModel.User>();
+            CreateMap<Dto.UserUpdate, DomainModel.User>();
         }
 	}
 }

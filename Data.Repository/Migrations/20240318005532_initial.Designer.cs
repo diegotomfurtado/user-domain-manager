@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Repository.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20240316044218_Create DataBase to User")]
-    partial class CreateDataBasetoUser
+    [Migration("20240318005532_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,10 @@ namespace Data.Repository.Migrations
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("EmailAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -58,10 +62,6 @@ namespace Data.Repository.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("emailAddress")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

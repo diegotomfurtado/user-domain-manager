@@ -11,11 +11,11 @@ namespace Domain.Model.Validation
         public static void ValidateInput(this Request.User user)
         {
             var exceptions = new List<ArgumentException>();
-            var regexItem = new Regex(@"\d");
+            var regexItem = new Regex(@"^[A-Za-z]+$");
 
-            if (regexItem.IsMatch(user.FirstName))
+            if (user == null)
             {
-                exceptions.Add(new ArgumentException("The 'FirstName' field cannot contain numeric characters."));
+                throw new ArgumentNullException(nameof(user), "The user object cannot be null.");
             }
 
             if (string.IsNullOrEmpty(user.FirstName))
@@ -23,7 +23,12 @@ namespace Domain.Model.Validation
                 exceptions.Add(new ArgumentException("The 'FirstName' field should not be null or empty."));
             }
 
-            if (regexItem.IsMatch(user.LastName))
+            if (!regexItem.IsMatch(user.FirstName))
+            {
+                exceptions.Add(new ArgumentException("The 'FirstName' field cannot contain numeric characters."));
+            }
+
+            if (!regexItem.IsMatch(user.LastName))
             {
                 exceptions.Add(new ArgumentException("The 'LastName' field cannot contain numeric characters."));
             }

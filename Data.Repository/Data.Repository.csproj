@@ -12,6 +12,7 @@
     <None Remove="Context\" />
     <None Remove="Map\" />
     <None Remove="Repositories\GenericFilter\" />
+    <None Remove="conf\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Repositories\" />
@@ -19,6 +20,7 @@
     <Folder Include="Context\" />
     <Folder Include="Map\" />
     <Folder Include="Repositories\GenericFilter\" />
+    <Folder Include="conf\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Application.DTO\Application.DTO.csproj">

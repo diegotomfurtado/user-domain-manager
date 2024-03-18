@@ -45,7 +45,7 @@ namespace Application.Services.Services
                 domainUser.CreationTime = date;
                 domainUser.CreatedBy = createdBy;
 
-                await userRepository.CreateProductAsync(domainUser);
+                await userRepository.CreateUserAsync(domainUser);
             }
             catch (Exception ex)
             {
@@ -86,7 +86,7 @@ namespace Application.Services.Services
 
                 var date = DateTime.UtcNow;
 
-                userToUpdate = mapper.Map<DTO.Requests.UserUpdate, User>(userDto, userToUpdate);
+                userToUpdate = mapper.Map(userDto, userToUpdate);
                 userToUpdate.UpdatedTime = date;
                 userToUpdate.UpdatedBy = userName;
 
@@ -110,7 +110,7 @@ namespace Application.Services.Services
 
             if (user == null)
             {
-                throw new Exception("The user doesn't exist yet!");
+                throw new UserNotFoundException();
             }
 
             await userRepository.DeleteUserByCodeAsync(user);
