@@ -36,6 +36,10 @@ namespace Data.Repository.Migrations
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("EmailAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -55,10 +59,6 @@ namespace Data.Repository.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("emailAddress")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
