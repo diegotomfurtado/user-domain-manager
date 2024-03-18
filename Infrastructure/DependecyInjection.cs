@@ -25,7 +25,10 @@ namespace Infrastructure
 
         public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddAutoMapper(typeof(DomainToDtoMapping));
             services.AddAutoMapper(typeof(DtoToDomainMapping));
+            services.AddAutoMapper(typeof(DtoToDomainUpdateMapping));
+
             services.AddScoped<IUserServices, UserServices>();
             return services;
 

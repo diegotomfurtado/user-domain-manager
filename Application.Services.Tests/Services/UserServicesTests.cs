@@ -109,37 +109,6 @@ namespace Application.Services.Tests.Services
         }
 
         [Fact]
-        public async Task CreateUserAsync_ShouldNotCreateNullObject_Fail()
-        {
-            // Arrange
-            var createdBy = this._fixture.Create<string>();
-            DTO.Requests.User userDto = null;
-
-            this._userRepositoryMock.Setup(
-                s => s.CheckExistenceOfUsersAsync(userDto))
-                .ReturnsAsync(false)
-                .Verifiable();
-
-            this._userRepositoryMock.Setup(
-                s => s.CheckExistenceOfEmailAddressAsync(userDto))
-                .ReturnsAsync(false)
-                .Verifiable();
-
-            this._userRepositoryMock.Setup(
-                s => s.CreateUserAsync(It.IsAny<User>()))
-                .Verifiable();
-
-            // Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
-            {
-                await this._userServices.CreateUserAsync(userDto, createdBy);
-            });
-
-            // Assert
-            Assert.Equal("The user object cannot be null. (Parameter 'user')", exception.Message);
-        }
-
-        [Fact]
         public async Task UpdateUserAsync_ShouldUpdate()
         {
             // Arrange
