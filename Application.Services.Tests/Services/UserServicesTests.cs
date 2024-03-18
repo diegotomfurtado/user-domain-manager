@@ -149,7 +149,7 @@ namespace Application.Services.Tests.Services
             var userDto = this._fixture.Build<DTO.Requests.UserUpdate>()
                 .With(x => x.FirstName, "Diego")
                 .With(x => x.LastName, "Furtado")
-                .With(x => x.emailAddress, "diegotomfurtado@gmail.com")
+                .With(x => x.EmailAddress, "diegotomfurtado@gmail.com")
                 .Create();
 
             this._userRepositoryMock.Setup(
@@ -178,7 +178,7 @@ namespace Application.Services.Tests.Services
                     It.Is<User>(
                         x => x.FirstName == userDto.FirstName &&
                              x.LastName == userDto.LastName &&
-                             x.EmailAddress == userDto.emailAddress &&
+                             x.EmailAddress == userDto.EmailAddress &&
                              x.NotesField == userDto.NotesField)),
                 Times.Once);
         }

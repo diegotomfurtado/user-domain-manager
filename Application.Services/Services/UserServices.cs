@@ -95,7 +95,7 @@ namespace Application.Services.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError("[UserService] - Failure to create a user.", ex,
+                _logger.LogError("[UserService] - Failure to update a user.", ex,
                     () => new
                     {
                         userCode

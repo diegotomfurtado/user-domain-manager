@@ -49,7 +49,7 @@ namespace Data.Repository.Repositories
             var user = userDbContext.Users.AsQueryable();
 
             if (!string.IsNullOrEmpty(userFilterDb.UserCode))
-                user.Where(x =>
+                user = user.Where(x =>
                     x.UserCode.Contains(userFilterDb.UserCode) ||
                     x.FirstName.Contains(userFilterDb.FirstName) ||
                     x.LastName.Contains(userFilterDb.LastName) ||
@@ -78,7 +78,7 @@ namespace Data.Repository.Repositories
         public async Task<bool> CheckExistenceOfEmailAddressAsync(Application.DTO.Requests.UserUpdate user)
         {
             var emailAddressExists = await userDbContext.Users
-                .AnyAsync(x => x.EmailAddress == user.emailAddress);
+                .AnyAsync(x => x.EmailAddress == user.EmailAddress);
 
             return emailAddressExists;
         }

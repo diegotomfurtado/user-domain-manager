@@ -7,6 +7,7 @@ using Data.Repository.Repositories;
 using Data.Repository.Context;
 using Microsoft.EntityFrameworkCore;
 using Application.Services.Mappers;
+using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +26,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddEntityFrameworkSqlServer()
     .AddDbContext<UserDbContext>(
-    option => option.UseSqlServer(builder.Configuration.GetConnectionString("DataBase"))
+    option => option.UseSqlServer(builder.Configuration.GetConnectionString("conf/DataBase"))
 );
 
 builder.Services.AddTransient<IApplicationContext, ApplicationContext>();
@@ -37,9 +38,12 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddServices(builder.Configuration);
+
 builder.Services.AddAutoMapper(typeof(DtoToDomainMapping));
 builder.Services.AddAutoMapper(typeof(DomainToDtoMapping));
-builder.Services.AddAutoMapper(typeof(DomainToDtoUpdateMapping));
+builder.Services.AddAutoMapper(typeof(DtoToDomainUpdateMapping));
 
 var app = builder.Build();
 
