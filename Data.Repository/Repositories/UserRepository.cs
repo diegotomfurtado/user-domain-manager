@@ -29,7 +29,7 @@ namespace Data.Repository.Repositories
 
         public async Task<User> GetUserByCodeAsync(string userCode)
         {
-            return await userDbContext.Users.FirstOrDefaultAsync(x => x.UserCode == userCode);
+            return await userDbContext.Users.FirstOrDefaultAsync(x => x.UserCode.Equals(userCode));
         }
 
         public async Task UpdateUserByCodeAsync(User user)
@@ -49,36 +49,33 @@ namespace Data.Repository.Repositories
             var user = userDbContext.Users.AsQueryable();
 
             if (!string.IsNullOrEmpty(userFilterDb.UserCode))
-                user = user.Where(x =>
-                    x.UserCode.Contains(userFilterDb.UserCode) ||
-                    x.FirstName.Contains(userFilterDb.FirstName) ||
-                    x.LastName.Contains(userFilterDb.LastName) ||
-                    x.EmailAddress.Contains(userFilterDb.EmailAddress));
+                user = user.Where(x => x.UserCode.Contains(userFilterDb.UserCode));
+
+            if (!string.IsNullOrEmpty(userFilterDb.FirstName))
+                user = user.Where(x => x.FirstName.Contains(userFilterDb.FirstName));
+
+            if (!string.IsNullOrEmpty(userFilterDb.LastName))
+                user = user.Where(x => x.LastName.Contains(userFilterDb.LastName));
+
+            if (!string.IsNullOrEmpty(userFilterDb.EmailAddress))
+                user = user.Where(x => x.EmailAddress.Contains(userFilterDb.EmailAddress));
 
             return await PagedBaseResponseHelper
                 .GetResponseAsync <Dto.PagedBaseResponse <User>, User > (user, userFilterDb);
         }
 
-        public async Task<Boolean> CheckExistenceOfUsersAsync(Application.DTO.Requests.User user)
+        public async Task<Boolean> CheckExistenceOfUsersAsync(string userCode)
         {
             var userExists = await userDbContext.Users
-                .AnyAsync(x => x.UserCode == user.userCode);
+                .AnyAsync(x => x.UserCode == userCode);
 
             return userExists;
         }
 
-        public async Task<bool> CheckExistenceOfEmailAddressAsync(Application.DTO.Requests.User user)
+        public async Task<bool> CheckExistenceOfEmailAddressAsync(string emailAddress)
         {
             var emailAddressExists = await userDbContext.Users
-                .AnyAsync(x => x.EmailAddress == user.emailAddress);
-
-            return emailAddressExists;
-        }
-
-        public async Task<bool> CheckExistenceOfEmailAddressAsync(Application.DTO.Requests.UserUpdate user)
-        {
-            var emailAddressExists = await userDbContext.Users
-                .AnyAsync(x => x.EmailAddress == user.EmailAddress);
+                .AnyAsync(x => x.EmailAddress == emailAddress);
 
             return emailAddressExists;
         }
