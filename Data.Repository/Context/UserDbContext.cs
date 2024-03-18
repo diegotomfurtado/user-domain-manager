@@ -12,10 +12,16 @@ namespace Data.Repository.Context
 
         public DbSet<User> Users { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder contextOptionsBuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            contextOptionsBuilder.UseSqlServer("Server=tcp:diegotomfurtado-ecommerce.database.windows.net,1433;Initial Catalog=ecommerce_teste;Encrypt=True;TrustServerCertificate=False;user=diegotomfurtado@diegotomfurtado-ecommerce;password=7&3JGXsK*9;Connection Timeout=30;");
-            base.OnConfiguring(contextOptionsBuilder);
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("conf/appsettings.json")
+                .Build();
+
+            string connectionString = configuration.GetConnectionString("DataBase");
+
+            optionsBuilder.UseSqlServer(connectionString);
         }
     }
 }

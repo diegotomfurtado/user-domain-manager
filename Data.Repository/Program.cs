@@ -1,20 +1,7 @@
-﻿using Data.Repository.Context;
-using Microsoft.EntityFrameworkCore;
+﻿var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
 
-namespace Data.Repository;
+app.MapGet("/", () => "Hello World!");
 
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
+app.Run();
 
-        builder.Services.AddEntityFrameworkSqlServer()
-            .AddDbContext<UserDbContext>(
-            option => option.UseSqlServer(builder.Configuration.GetConnectionString("DataBase"))
-        );
-
-        var app = builder.Build();
-        app.Run();
-    }
-}

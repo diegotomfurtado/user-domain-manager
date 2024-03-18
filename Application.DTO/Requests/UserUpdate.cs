@@ -6,7 +6,7 @@
 
         public string? LastName { get; set; }
 
-        public string? emailAddress { get; set; }
+        public string? EmailAddress { get; set; }
 
         public string? NotesField { get; set; }
 

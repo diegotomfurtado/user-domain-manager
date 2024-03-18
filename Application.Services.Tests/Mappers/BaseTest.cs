@@ -12,7 +12,7 @@ namespace Application.Services.Tests
             {
                 op.AddProfile<DomainToDtoMapping>();
                 op.AddProfile<DtoToDomainMapping>();
-                op.AddProfile<DomainToDtoUpdateMapping>();
+                op.AddProfile<DtoToDomainUpdateMapping>();
             });
 
             return config.CreateMapper();

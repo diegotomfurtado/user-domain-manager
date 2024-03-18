@@ -1,7 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Application.Services.Core;
+﻿using Application.Services.Core;
 using Application.Services.Services.Interface;
-using Azure;
 using Data.Repository.Repositories.GenericFilter;
 using Domain.Model;
 using Microsoft.AspNetCore.Mvc;
