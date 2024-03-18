@@ -52,10 +52,11 @@ A user object consists of the following properties:
 
 ## API Endpoints
 
-- **POST /api/users**: Add a new user.
-- **DELETE /api/users/{id}**: Delete a user by ID.
-- **PUT /api/users/{id}**: Update user information by ID.
-- **GET /api/users**: Retrieve a list of users with optional filter parameters.
+- **POST /api/user**: Add a new user.
+- **DELETE /api/user/{userCode}**: Delete a user by ID.
+- **PUT /api/user/{userCode}**: Update user information by ID.
+- **GET /api/user/{userCode}**: Retrieve a single user..
+- **GET /api/user/**: Retrieve a list of users with optional filter parameters.
 
 ## Contributing
 
