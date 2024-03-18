@@ -29,12 +29,12 @@ namespace Application.Services.Services
             {
                 userDto.ValidateInput();
 
-                if (await userRepository.CheckExistenceOfUsersAsync(userDto))
+                if (await userRepository.CheckExistenceOfUsersAsync(userDto.userCode))
                 {
                     throw new UserAlreadyExistsException();
                 }
 
-                if (await userRepository.CheckExistenceOfEmailAddressAsync(userDto))
+                if (await userRepository.CheckExistenceOfEmailAddressAsync(userDto.emailAddress))
                 {
                     throw new EmailAddressAlreadyExistsException();
                 }
@@ -79,7 +79,7 @@ namespace Application.Services.Services
                     throw new UserNotFoundException();
                 }
 
-                if (await userRepository.CheckExistenceOfEmailAddressAsync(userDto))
+                if (await userRepository.CheckExistenceOfEmailAddressAsync(userDto.EmailAddress))
                 {
                     throw new EmailAddressAlreadyExistsException();
                 }
@@ -124,11 +124,11 @@ namespace Application.Services.Services
             return result;
         }
 
-        public async Task CheckExistenceOfUserAsync(DTO.Requests.User user)
+        public async Task CheckExistenceOfUserAsync(string userCode)
         {
             try
             {
-                if ((await this.userRepository.CheckExistenceOfUsersAsync(user)))
+                if ((await this.userRepository.CheckExistenceOfUsersAsync(userCode)))
                 {
                     throw new UserAlreadyExistsException();
                 }
@@ -144,17 +144,17 @@ namespace Application.Services.Services
                     ex,
                     () => new
                     {
-                        user
+                        userCode
                     });
                 throw;
             }
         }
 
-        public async Task CheckExistenceOfEmailAddressAsync(DTO.Requests.User user)
+        public async Task CheckExistenceOfEmailAddressAsync(string emailAddress)
         {
             try
             {
-                if ((await this.userRepository.CheckExistenceOfEmailAddressAsync(user)))
+                if ((await this.userRepository.CheckExistenceOfEmailAddressAsync(emailAddress)))
                 {
                     throw new EmailAddressAlreadyExistsException();
                 }
@@ -170,33 +170,7 @@ namespace Application.Services.Services
                     ex,
                     () => new
                     {
-                        user
-                    });
-                throw;
-            }
-        }
-
-        public async Task CheckExistenceOfEmailAddressAsync(DTO.Requests.UserUpdate user)
-        {
-            try
-            {
-                if ((await this.userRepository.CheckExistenceOfEmailAddressAsync(user)))
-                {
-                    throw new EmailAddressAlreadyExistsException();
-                }
-            }
-            catch (EmailAddressAlreadyExistsException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(
-                    "[UserService] - Failed to check existence of users.",
-                    ex,
-                    () => new
-                    {
-                        user
+                        emailAddress
                     });
                 throw;
             }

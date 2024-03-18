@@ -50,7 +50,7 @@ namespace Application.Services.Tests.Services
             var resultUserDto = await this._userServices.GetUserByCodeAsync(userCode);
 
             // Assert
-            Assert.True(resultUserDto != null, "O resultado não deveria ser nulo.");
+            Assert.True(resultUserDto != null, "The result should not be null");
             Assert.Equal(resultUserDto.UserCode,userModel.UserCode);
             Assert.Equal(resultUserDto.FirstName, userModel.FirstName);
             Assert.Equal(resultUserDto.LastName, userModel.LastName);
@@ -77,12 +77,12 @@ namespace Application.Services.Tests.Services
                 .Create();
 
             this._userRepositoryMock.Setup(
-                s => s.CheckExistenceOfUsersAsync(userDto))
+                s => s.CheckExistenceOfUsersAsync(userDto.emailAddress))
                 .ReturnsAsync(false)
                 .Verifiable();
 
             this._userRepositoryMock.Setup(
-                s => s.CheckExistenceOfEmailAddressAsync(userDto))
+                s => s.CheckExistenceOfEmailAddressAsync(userDto.emailAddress))
                 .ReturnsAsync(false)
                 .Verifiable();
 
@@ -116,12 +116,12 @@ namespace Application.Services.Tests.Services
             DTO.Requests.User userDto = null;
 
             this._userRepositoryMock.Setup(
-                s => s.CheckExistenceOfUsersAsync(userDto))
+                s => s.CheckExistenceOfUsersAsync(userDto.emailAddress))
                 .ReturnsAsync(false)
                 .Verifiable();
 
             this._userRepositoryMock.Setup(
-                s => s.CheckExistenceOfEmailAddressAsync(userDto))
+                s => s.CheckExistenceOfEmailAddressAsync(userDto.emailAddress))
                 .ReturnsAsync(false)
                 .Verifiable();
 
@@ -158,7 +158,7 @@ namespace Application.Services.Tests.Services
                 .Verifiable();
 
             this._userRepositoryMock.Setup(
-                s => s.CheckExistenceOfEmailAddressAsync(userDto))
+                s => s.CheckExistenceOfEmailAddressAsync(userDto.EmailAddress))
                 .ReturnsAsync(false)
                 .Verifiable();
 

@@ -13,10 +13,8 @@ namespace Application.Services.Services.Interface
         Task DeleteUserByCodeAsync(string userCode);
         Task<Dto.PagedBaseResponseDTO<Dto.User>> GetPagedAsync(UserFilterDb userFilterDb);
 
-        //To improve - Create a generic interface
-        Task CheckExistenceOfUserAsync(DTO.Requests.User user);
-        Task CheckExistenceOfEmailAddressAsync(DTO.Requests.User user);
-        Task CheckExistenceOfEmailAddressAsync(DTO.Requests.UserUpdate user);
+        Task CheckExistenceOfUserAsync(string userCode);
+        Task CheckExistenceOfEmailAddressAsync(string emailAddress);
     }
 }
 
