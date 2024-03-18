@@ -39,7 +39,7 @@ A user object consists of the following properties:
 
 ## What I did different
 - I've worked with SQL Server, from Azure, insted
-- I couldn't use all SOLID principal
+- I couldn't use all SOLID principles
 
 ## Setup Instructions
 
