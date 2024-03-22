@@ -1,27 +1,29 @@
-﻿using Domain.Model;
+﻿using System.Reflection;
+using Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repository.Context
 {
 	public class UserDbContext : DbContext
     {
-        public UserDbContext(DbContextOptions<UserDbContext> options)
-            : base(options)
-        {
-        }
+        public UserDbContext(DbContextOptions<UserDbContext> options) : base(options)
+        { }
 
         public DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("conf/appsettings.json")
-                .Build();
+            var absolutePath = AppDomain.CurrentDomain.BaseDirectory;
+            var fatherPath = Directory.GetParent(absolutePath)?.Parent.Parent.Parent.Parent.Parent?.FullName;
+            var fullPath = Path.Combine(fatherPath, "Data.Repository/database.db");
 
-            string connectionString = configuration.GetConnectionString("DataBase");
+            optionsBuilder.UseSqlite($"Data Source={fullPath}");
+        }
 
-            optionsBuilder.UseSqlServer(connectionString);
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserDbContext).Assembly);
         }
     }
 }
