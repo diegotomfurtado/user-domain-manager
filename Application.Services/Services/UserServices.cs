@@ -124,7 +124,7 @@ namespace Application.Services.Services
         public async Task<DtoResponse.PagedBaseResponseDTO<DtoResponse.User>> GetPagedAsync(UserFilterDb userFilterDb)
         {
             var usersPaged = await userRepository.GetPagedAsync(userFilterDb);
-            var result = new DtoResponse.PagedBaseResponseDTO<DtoResponse.User>(usersPaged.TotalItems, mapper.Map<List<DtoResponse.User>>(usersPaged.Results));
+            var result = new DtoResponse.PagedBaseResponseDTO<DtoResponse.User>(usersPaged.TotalItems, usersPaged.TotalPages, mapper.Map<List<DtoResponse.User>>(usersPaged.Results));
 
             return result;
         }
