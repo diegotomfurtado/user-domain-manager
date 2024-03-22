@@ -6,7 +6,6 @@ using Data.Repository.Repositories;
 using Data.Repository.Repositories.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace Infrastructure
 {
@@ -18,7 +17,6 @@ namespace Infrastructure
             {
                 var absolutePath = AppDomain.CurrentDomain.BaseDirectory;
                 var fatherPath = Directory.GetParent(absolutePath)?.Parent.Parent.Parent.Parent.Parent?.FullName;
-
                 
                 new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())

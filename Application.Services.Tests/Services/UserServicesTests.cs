@@ -7,7 +7,6 @@ using Data.Repository.Repositories.Interfaces;
 using Domain.Model;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Dto = Application.DTO.Responses;
 
 namespace Application.Services.Tests.Services
 {
@@ -73,16 +72,16 @@ namespace Application.Services.Tests.Services
             var userDto = this._fixture.Build<DTO.Requests.User>()
                 .With(x => x.FirstName, "Diego")
                 .With(x => x.LastName, "Furtado")
-                .With(x => x.emailAddress, "diegotomfurtado@gmail.com")
+                .With(x => x.EmailAddress, "diegotomfurtado@gmail.com")
                 .Create();
 
             this._userRepositoryMock.Setup(
-                s => s.CheckExistenceOfUsersAsync(userDto.emailAddress))
+                s => s.CheckExistenceOfUsersAsync(userDto.EmailAddress))
                 .ReturnsAsync(false)
                 .Verifiable();
 
             this._userRepositoryMock.Setup(
-                s => s.CheckExistenceOfEmailAddressAsync(userDto.emailAddress))
+                s => s.CheckExistenceOfEmailAddressAsync(userDto.EmailAddress))
                 .ReturnsAsync(false)
                 .Verifiable();
 
@@ -103,7 +102,7 @@ namespace Application.Services.Tests.Services
                         x => x.UserCode == userDto.userCode &&
                              x.FirstName == userDto.FirstName &&
                              x.LastName == userDto.LastName &&
-                             x.EmailAddress == userDto.emailAddress &&
+                             x.EmailAddress == userDto.EmailAddress &&
                              x.NotesField == userDto.NotesField)),
                 Times.Once);
         }
@@ -116,12 +115,12 @@ namespace Application.Services.Tests.Services
             DTO.Requests.User userDto = null;
 
             this._userRepositoryMock.Setup(
-                s => s.CheckExistenceOfUsersAsync(userDto.emailAddress))
+                s => s.CheckExistenceOfUsersAsync(It.IsAny<string>()))
                 .ReturnsAsync(false)
                 .Verifiable();
 
             this._userRepositoryMock.Setup(
-                s => s.CheckExistenceOfEmailAddressAsync(userDto.emailAddress))
+                s => s.CheckExistenceOfEmailAddressAsync(It.IsAny<string>()))
                 .ReturnsAsync(false)
                 .Verifiable();
 
