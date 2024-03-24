@@ -5,7 +5,8 @@ using Data.Repository.Repositories.GenericFilter;
 using Data.Repository.Repositories.Interfaces;
 using Domain.Model;
 using Domain.Model.Validation;
-using Dto = Application.DTO.Responses;
+using DtoResponse = Application.DTO.Responses;
+using DtoRequest = Application.DTO.Requests;
 
 namespace Application.Services.Services
 {
@@ -23,7 +24,7 @@ namespace Application.Services.Services
             this._logger = logger;
         }
 
-        public async Task CreateUserAsync(DTO.Requests.User userDto, string createdBy)
+        public async Task CreateUserAsync(DtoRequest.User userDto, string createdBy)
         {
             try
             {
@@ -34,7 +35,8 @@ namespace Application.Services.Services
                     throw new UserAlreadyExistsException();
                 }
 
-                if (await userRepository.CheckExistenceOfEmailAddressAsync(userDto.emailAddress))
+                var emailFormatted = userDto.EmailAddress.Replace(" ", "");
+                if (await userRepository.CheckExistenceOfEmailAddressAsync(emailFormatted))
                 {
                     throw new EmailAddressAlreadyExistsException();
                 }
@@ -44,6 +46,7 @@ namespace Application.Services.Services
                 var domainUser = mapper.Map<User> (userDto);
                 domainUser.CreationTime = date;
                 domainUser.CreatedBy = createdBy;
+                domainUser.EmailAddress = emailFormatted;
 
                 await userRepository.CreateUserAsync(domainUser);
             }
@@ -59,14 +62,14 @@ namespace Application.Services.Services
             }
         }
 
-        public async Task<Dto.User> GetUserByCodeAsync(string userCode)
+        public async Task<DtoResponse.User> GetUserByCodeAsync(string userCode)
         {
-            User userByCode = await userRepository.GetUserByCodeAsync(userCode);
+            Domain.Model.User userByCode = await userRepository.GetUserByCodeAsync(userCode);
             
-            return mapper.Map<Dto.User>(userByCode);
+            return mapper.Map<DtoResponse.User>(userByCode);
         }
 
-        public async Task UpdateUserByCodeAsync(string userCode, DTO.Requests.UserUpdate userDto, string userName)
+        public async Task UpdateUserByCodeAsync(string userCode, DtoRequest.UserUpdate userDto, string userName)
         {
             try
             {
@@ -79,7 +82,8 @@ namespace Application.Services.Services
                     throw new UserNotFoundException();
                 }
 
-                if (await userRepository.CheckExistenceOfEmailAddressAsync(userDto.EmailAddress))
+                var emailFormatted = userDto.EmailAddress.Replace(" ", "");
+                if (await userRepository.CheckExistenceOfEmailAddressAsync(emailFormatted) && !userToUpdate.EmailAddress.Equals(emailFormatted))
                 {
                     throw new EmailAddressAlreadyExistsException();
                 }
@@ -89,6 +93,7 @@ namespace Application.Services.Services
                 userToUpdate = mapper.Map(userDto, userToUpdate);
                 userToUpdate.UpdatedTime = date;
                 userToUpdate.UpdatedBy = userName;
+                userToUpdate.EmailAddress = emailFormatted;
 
                 await userRepository.UpdateUserByCodeAsync(userToUpdate);
 
@@ -116,10 +121,10 @@ namespace Application.Services.Services
             await userRepository.DeleteUserByCodeAsync(user);
         }
 
-        public async Task<Dto.PagedBaseResponseDTO<Dto.User>> GetPagedAsync(UserFilterDb userFilterDb)
+        public async Task<DtoResponse.PagedBaseResponseDTO<DtoResponse.User>> GetPagedAsync(UserFilterDb userFilterDb)
         {
             var usersPaged = await userRepository.GetPagedAsync(userFilterDb);
-            var result = new Dto.PagedBaseResponseDTO<Dto.User>(usersPaged.TotalItems, mapper.Map<List<Dto.User>>(usersPaged.Results));
+            var result = new DtoResponse.PagedBaseResponseDTO<DtoResponse.User>(usersPaged.TotalItems, usersPaged.TotalPages, mapper.Map<List<DtoResponse.User>>(usersPaged.Results));
 
             return result;
         }

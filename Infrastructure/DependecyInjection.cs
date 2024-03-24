@@ -4,7 +4,6 @@ using Application.Services.Services.Interface;
 using Data.Repository.Context;
 using Data.Repository.Repositories;
 using Data.Repository.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,7 +15,14 @@ namespace Infrastructure
         {
             services.AddDbContext<UserDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("DataBase"));
+                var absolutePath = AppDomain.CurrentDomain.BaseDirectory;
+                var fatherPath = Directory.GetParent(absolutePath)?.Parent.Parent.Parent.Parent.Parent?.FullName;
+                
+                new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile($"{fatherPath}/Data.Repository/conf/appsettings.json")
+                .Build();
+
             });
 
             services.AddScoped<IUserRepository, UserRepository>();

@@ -4,10 +4,9 @@ using Application.Services.Services.Interface;
 using Data.Repository.Repositories.Interfaces;
 using Application.Services.Services;
 using Data.Repository.Repositories;
+using Infrastructure;
 using Data.Repository.Context;
 using Microsoft.EntityFrameworkCore;
-using Application.Services.Mappers;
-using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,9 +25,6 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddTransient<IApplicationContext, ApplicationContext>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-builder.Services.AddScoped<IUserServices, UserServices>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
